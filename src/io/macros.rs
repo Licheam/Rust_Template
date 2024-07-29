@@ -1,4 +1,4 @@
-#[macro_export(local_inner_macros)]
+#[macro_export]
 macro_rules! scanln {
     ($($i:expr), +) => {
         let mut iter = std::iter::repeat_with(|| {
