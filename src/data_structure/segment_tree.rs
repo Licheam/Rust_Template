@@ -1,47 +1,3 @@
-mod cp {
-    use std::io::prelude::*;
-    pub fn stdin_to_string() -> String {
-        let mut content = String::new();
-        let stdin = std::io::stdin();
-        let mut rd = stdin.lock();
-        rd.read_to_string(&mut content).unwrap();
-        return content;
-    }
-
-    pub struct Parser<'a> {
-        tokens: std::str::SplitWhitespace<'a>,
-    }
-
-    impl<'a> Parser<'a> {
-        pub fn new(text: &'a str) -> Self {
-            Self {
-                tokens: text.split_whitespace(),
-            }
-        }
-
-        pub fn read_or_eof<T: std::str::FromStr>(&mut self) -> Option<T> {
-            self.next().map(|s| match s.parse() {
-                Ok(x) => x,
-                Err(_) => panic!("cannot parse {:?}", s),
-            })
-        }
-
-        pub fn read<T: std::str::FromStr>(&mut self) -> T {
-            self.read_or_eof::<T>().expect("unexpected end-of-file")
-        }
-    }
-
-    impl<'a> Iterator for Parser<'a> {
-        type Item = &'a str;
-        fn next(&mut self) -> Option<&'a str> {
-            self.tokens.next()
-        }
-    }
-}
-
-use cp::*;
-use std::*;
-
 #[derive(Debug)]
 struct SGT {
     sum: Vec<i64>,
@@ -107,36 +63,5 @@ impl SGT {
             + (if m < qr { self.query(x<<1|1, m+1, r, ql, qr) } else { 0 })
             // + tag[x] * (cmp::min(qr,r)-cmp::max(ql,l)+1) as i64
         }
-    }
-}
-
-fn solve(inp: &mut Parser) {
-    let (n,m): (usize, usize) = (inp.read(), inp.read());
-    let a: Vec<i64> = (0..n).map(|_| inp.read()).collect();
-    let mut sgt = SGT::new(n);
-    sgt.build(1,1,n,&a);
-    for _ in 0..m {
-        let op: usize = inp.read();
-        match op {
-            1 => {
-                let (l, r, k): (usize, usize, i64) = (inp.read(), inp.read(), inp.read());
-                sgt.modify(1,1,n,l,r,k);
-            }
-            2 => {
-                let (l, r): (usize, usize) = (inp.read(), inp.read());
-                println!("{}", sgt.query(1,1,n,l,r));
-            }
-            _ => {}
-        }
-    }
-}
-
-fn main() {
-    let content = stdin_to_string();
-    let mut inp = Parser::new(&content);
-    let t: usize = 1;
-    for _cas in 1..=t {
-        // print!("Case #{}: ", _cas);
-        solve(&mut inp);
     }
 }
