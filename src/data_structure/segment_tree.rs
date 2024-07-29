@@ -1,10 +1,10 @@
 #[derive(Debug)]
-struct SGT {
+pub struct SegmentTree {
     sum: Vec<i64>,
     tag: Vec<i64>,
 }
 
-impl SGT {
+impl SegmentTree {
     pub fn new(n: usize) -> Self {
         Self {
             sum: vec![0; n<<2],
@@ -13,12 +13,12 @@ impl SGT {
     }
 
     fn pushup(&mut self, x: usize) {
-        let SGT { sum, .. } = self;
+        let SegmentTree { sum, .. } = self;
         sum[x] = sum[x<<1] + sum[x<<1|1];
     }
 
     fn pushdown(&mut self, x: usize, l: usize, r: usize) {
-        let SGT { sum, tag } = self;
+        let SegmentTree { sum, tag } = self;
         let m = (l+r)>>1;
         sum[x<<1] += tag[x]*(m-l+1) as i64;
         tag[x<<1] += tag[x];
@@ -28,7 +28,7 @@ impl SGT {
     }
 
     pub fn build(&mut self, x: usize, l: usize, r: usize, a: &Vec<i64>) {
-        let SGT { sum, .. } = self;
+        let SegmentTree { sum, .. } = self;
         if l == r { sum[x] = a[l-1] }
         else {
             let m = (l+r)>>1;
@@ -40,7 +40,7 @@ impl SGT {
 
     pub fn modify(&mut self, x: usize, l: usize, r: usize, ql: usize, qr: usize, del: i64) {
         if ql <= l && r <= qr {
-            let SGT { sum, tag } = self;
+            let SegmentTree { sum, tag } = self;
             sum[x] += del*(r-l+1) as i64;
             tag[x] += del;
         } else {
@@ -48,7 +48,7 @@ impl SGT {
             let m = (l+r)>>1;
             if ql <= m { self.modify(x<<1, l, m, ql, qr, del) }
             if m < qr { self.modify(x<<1|1, m+1, r, ql, qr, del) }
-            // let SGT { sum, tag } = self;
+            // let SegmentTree { sum, tag } = self;
             // sum[x] = tag[x]*(r-l+1) as i64 + sum[x<<1] + sum[x<<1|1];
             self.pushup(x);
         }

@@ -1,7 +1,7 @@
 //! A disjoint-set data structure, also called a union–find data structure or merge–find set.
 
 #[derive(Debug)]
-struct DisjointSetUnion {
+pub struct DisjointSetUnion {
     fa: Vec<usize>,
 }
 
