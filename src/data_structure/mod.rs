@@ -1,5 +1,7 @@
 pub mod disjoint_set_union;
 pub mod segment_tree;
 
-pub use binary_heap::BinaryHeap;
+#[doc(inline)]
 pub use disjoint_set_union::DisjointSetUnion;
+#[doc(inline)]
+pub use segment_tree::SegmentTree;
